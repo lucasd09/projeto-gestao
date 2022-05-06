@@ -10,7 +10,10 @@ class Login extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('ICE'),
+          const Text('ICE',
+              style: TextStyle(
+                fontSize: 48,
+              )),
           TextFormField(
             obscureText: false,
             decoration: const InputDecoration(
