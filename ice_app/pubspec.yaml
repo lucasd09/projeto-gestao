@@ -25,7 +25,31 @@ flutter:
 
   uses-material-design: true
 
-assets:
-  #custom fonts
-
-  #images
+  assets:
+    #custom fonts
+    - assets/fonts/Montserrat-Black.ttf
+    - assets/fonts/Montserrat-BlackItalic.ttf
+    - assets/fonts/Montserrat-Bold.ttf
+    - assets/fonts/Montserrat-BoldItalic.ttf
+    - assets/fonts/Montserrat-ExtraBold.ttf
+    - assets/fonts/Montserrat-ExtraBoldItalic.ttf
+    - assets/fonts/Montserrat-ExtraLight.ttf
+    - assets/fonts/Montserrat-ExtraLightItalic.ttf
+    - assets/fonts/Montserrat-Italic-VariableFont_wght.ttf
+    - assets/fonts/Montserrat-Italic.ttf
+    - assets/fonts/Montserrat-Light.ttf
+    - assets/fonts/Montserrat-LightItalic.ttf
+    - assets/fonts/Montserrat-Medium.ttf
+    - assets/fonts/Montserrat-MediumItalic.ttf
+    - assets/fonts/Montserrat-Regular.ttf
+    - assets/fonts/Montserrat-SemiBold.ttf
+    - assets/fonts/Montserrat-SemiBoldItalic.ttf
+    - assets/fonts/Montserrat-Thin.ttf
+    - assets/fonts/Montserrat-ThinItalic.ttf
+    - assets/fonts/Montserrat-VariableFont_wght.ttf
+    
+    #images
+    - assets/images/ice_logo.png
+    - assets/images/ice_logo_dark.png
+    - assets/images/ice_logo.svg
+    - assets/images/ice_logo_dark.svg

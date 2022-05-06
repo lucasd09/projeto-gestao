@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ice_app/constants/app_constants.dart';
+import 'package:ice_app/core/auth/login/ui/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ice App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+        primaryColor: PrimaryColor,
+        scaffoldBackgroundColor: BackgroundColor,
       ),
+      home: const Login(), 
     );
   }
 }
