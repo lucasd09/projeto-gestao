@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ice_app/constants/app_constants.dart';
 import 'package:ice_app/core/auth/login/ui/login.dart';
 
@@ -11,14 +12,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Ice App',
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: PrimaryColor,
         scaffoldBackgroundColor: BackgroundColor,
       ),
-      home: const Login(), 
+      getPages: [
+        GetPage(name: '/', page: () => Login())
+      ],
     );
   }
 }
