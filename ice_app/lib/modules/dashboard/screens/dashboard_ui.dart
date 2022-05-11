@@ -10,11 +10,10 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
+    return const Scaffold(
+      body: Center(
+        child: Text('Dashboard'),
       ),
-      body: const Center(child: Text('Dashboard')),
     );
   }
 }
