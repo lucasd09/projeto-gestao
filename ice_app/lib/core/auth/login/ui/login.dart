@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice_app/constants/app_constants.dart';
 import 'package:ice_app/core/auth/login/models/auth_service.dart';
+import 'package:ice_app/core/auth/register/ui/register.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -38,9 +39,8 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 78),
-                child: Image.asset('assets/images/ice_logo.png')
-              ),
+                  padding: const EdgeInsets.only(bottom: 78),
+                  child: Image.asset('assets/images/ice_logo.png')),
               Padding(
                 padding: const EdgeInsets.only(bottom: 22),
                 child: TextFormField(
@@ -80,6 +80,13 @@ class _LoginState extends State<Login> {
                     child: const Text('Login', style: TextStyle(fontSize: 18),)),
               ),
               OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Register()));
+                  },
+                  child: const Text('Cadastre-se')),
                 style: OutlinedButton.styleFrom(fixedSize: const Size(155, 40)),
                   onPressed: () {}, child: const Text('Cadastre-se', style: TextStyle(fontSize: 18, color: PrimaryTextColor))),
             ],
