@@ -47,7 +47,6 @@ class _LoginState extends State<Login> {
                   obscureText: false,
                   controller: emailController,
                   decoration: const InputDecoration(
-                    
                     prefixIcon: Icon(Icons.email_outlined),
                     border: OutlineInputBorder(),
                     labelText: 'e-mail',
@@ -71,15 +70,21 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: PrimaryColor, fixedSize: const Size(155, 40)),
+                    style: ElevatedButton.styleFrom(
+                        primary: PrimaryColor, fixedSize: const Size(155, 40)),
                     onPressed: () {
                       context.read<AuthService>().signIn(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim());
                     },
-                    child: const Text('Login', style: TextStyle(fontSize: 18),)),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(fontSize: 18),
+                    )),
               ),
               OutlinedButton(
+                  style:
+                      OutlinedButton.styleFrom(fixedSize: const Size(155, 40)),
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -87,8 +92,6 @@ class _LoginState extends State<Login> {
                             builder: (context) => const Register()));
                   },
                   child: const Text('Cadastre-se')),
-                style: OutlinedButton.styleFrom(fixedSize: const Size(155, 40)),
-                  onPressed: () {}, child: const Text('Cadastre-se', style: TextStyle(fontSize: 18, color: PrimaryTextColor))),
             ],
           ),
         ),
