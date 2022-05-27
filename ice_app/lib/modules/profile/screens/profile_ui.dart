@@ -14,7 +14,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   var size, height, width;
-  
+
   bool enable = false;
 
   @override
@@ -32,32 +32,41 @@ class _ProfileState extends State<Profile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Image.asset('assets/images/ice_logo.png', width: 160, height: 160,),
+              Image.asset(
+                'assets/images/ice_logo.png',
+                width: 160,
+                height: 160,
+              ),
               ElevatedButton(
-                  onPressed: () { enable = !enable;},
+                  onPressed: () {
+                    enable = !enable;
+                  },
                   child: const Icon(Icons.drive_file_rename_outline_outlined))
             ],
           ),
-          TextField(
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Nome Sobrenome'),
-            enabled: enable,
+          const Divider(
+            thickness: 1,
           ),
           TextField(
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Empresa'),
+            decoration: const InputDecoration(labelText: 'Nome Sobrenome'),
             enabled: enable,
           ),
+          const Divider(),
           TextField(
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Cargo'),
+            decoration: const InputDecoration(labelText: 'Empresa'),
             enabled: enable,
           ),
+          const Divider(),
           TextField(
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), labelText: 'e-mail'),
+            decoration: const InputDecoration(labelText: 'Cargo'),
             enabled: enable,
           ),
+          const Divider(),
+          TextField(
+            decoration: const InputDecoration(labelText: 'e-mail'),
+            enabled: enable,
+          ),
+          const Divider(),
           TextButton.icon(
             onPressed: () {
               context.read<AuthService>().signOut();

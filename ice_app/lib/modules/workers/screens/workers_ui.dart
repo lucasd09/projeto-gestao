@@ -10,6 +10,8 @@ class Workers extends StatefulWidget {
 class _WorkersState extends State<Workers> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Funcionários'));
+    return Center(child: ListView.builder(itemCount: 25,itemBuilder: (context, index) {
+      return const ListTile(title: Text('dale'),);
+    },));
   }
 }
