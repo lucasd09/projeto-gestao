@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class Launch extends StatefulWidget {
   const Launch({ Key? key }) : super(key: key);
 
@@ -10,6 +11,17 @@ class Launch extends StatefulWidget {
 class _LaunchState extends State<Launch> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('lancamento'));
+    return Center(child: Column(
+      mainAxisAlignment: MainAxisAlignment.center, 
+      children: 
+      const [Text('Lançamento'),
+      Divider(
+            thickness: 1,
+          ),
+          TextField(
+            decoration: InputDecoration(labelText: 'Nome Sobrenome'),
+          ),],
+      )
+      );
   }
 }
