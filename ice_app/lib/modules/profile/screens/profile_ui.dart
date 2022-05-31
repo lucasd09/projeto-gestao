@@ -48,22 +48,23 @@ class _ProfileState extends State<Profile> {
             thickness: 1,
           ),
           TextField(
-            decoration: const InputDecoration(labelText: 'Nome Sobrenome'),
+            decoration: const InputDecoration(labelText: 'Lucas Dalan'),
             enabled: enable,
           ),
           const Divider(),
           TextField(
-            decoration: const InputDecoration(labelText: 'Empresa'),
+            decoration: const InputDecoration(labelText: 'UNIVEM'),
             enabled: enable,
           ),
           const Divider(),
           TextField(
-            decoration: const InputDecoration(labelText: 'Cargo'),
+            decoration:
+                const InputDecoration(labelText: 'Gerente de Qualidade'),
             enabled: enable,
           ),
           const Divider(),
           TextField(
-            decoration: const InputDecoration(labelText: 'e-mail'),
+            decoration: const InputDecoration(labelText: 'teste@gmail.com'),
             enabled: enable,
           ),
           const Divider(),
