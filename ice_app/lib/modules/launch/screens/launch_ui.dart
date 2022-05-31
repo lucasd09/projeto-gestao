@@ -106,15 +106,6 @@ class _LaunchState extends State<Launch> {
                 'Lançar',
                 style: TextStyle(fontSize: 18),
               )),
-          ElevatedButton(
-              onPressed: () {
-                db.collection("sectors").get().then((event) {
-                  for (var doc in event.docs) {
-                    print("${doc.id} => ${doc.get('title')}");
-                  }
-                });
-              },
-              child: const Text('Ler'))
         ],
       ),
     ));
