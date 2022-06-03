@@ -12,10 +12,16 @@ class Launch extends StatefulWidget {
 }
 
 class _LaunchState extends State<Launch> {
-  var size, height, width, selectedValue = "Setor 1";
+  var size,
+      height,
+      width,
+      selectedValue1 = "Setor 1",
+      selectedValue2 = "Setor 1";
 
   final complainTitle = TextEditingController();
   final complainBody = TextEditingController();
+  final workerName = TextEditingController();
+  final workerJob = TextEditingController();
 
   @override
   void dispose() {
@@ -49,23 +55,23 @@ class _LaunchState extends State<Launch> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Lançamento'),
+          const Text('Reclamação'),
           const Divider(
             thickness: 1,
           ),
           TextFormField(
             controller: complainTitle,
             decoration: const InputDecoration(
-              labelText: 'Título da reclamação',
+              labelText: 'Nome do funcionário',
               border: OutlineInputBorder(),
             ),
           ),
           DropdownButton(
-            value: selectedValue,
+            value: selectedValue1,
             items: dropdownItems,
             onChanged: (String? value) {
               setState(() {
-                selectedValue = value!;
+                selectedValue1 = value!;
               });
             },
           ),
@@ -82,8 +88,9 @@ class _LaunchState extends State<Launch> {
               onPressed: () {
                 var complain = <String, dynamic>{
                   "title": complainTitle.text.trim(),
-                  "setor": selectedValue,
-                  "body": complainBody.text.trim()
+                  "setor": selectedValue1,
+                  "body": complainBody.text.trim(),
+                  "resolved": false
                 };
 
                 db.collection("complains").add(complain);
@@ -104,6 +111,62 @@ class _LaunchState extends State<Launch> {
               },
               child: const Text(
                 'Lançar',
+                style: TextStyle(fontSize: 18),
+              )),
+          const Padding(padding: EdgeInsets.only(top: 100)),
+          const Text('Cadastrar Funcionário'),
+          const Divider(),
+          TextFormField(
+            controller: workerName,
+            decoration: const InputDecoration(
+              labelText: 'Nome do funcionário',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          DropdownButton(
+            value: selectedValue2,
+            items: dropdownItems,
+            onChanged: (String? value) {
+              setState(() {
+                selectedValue2 = value!;
+              });
+            },
+          ),
+          TextFormField(
+            controller: workerJob,
+            decoration: const InputDecoration(
+              labelText: 'Cargo',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: PrimaryColor, fixedSize: const Size(155, 40)),
+              onPressed: () {
+                var worker = <String, dynamic>{
+                  "name": workerName.text.trim(),
+                  "setor": selectedValue2,
+                  "job": workerJob.text.trim()
+                };
+
+                db.collection("workers").add(worker);
+
+                workerName.clear();
+                workerJob.clear();
+
+                final snackBar = SnackBar(
+                  content: const Text('Funcionário Cadastrado com Sucesso!'),
+                  action: SnackBarAction(
+                    label: 'Fechar',
+                    onPressed: () {
+                      // Some code to undo the change.
+                    },
+                  ),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+              child: const Text(
+                'Cadastrar',
                 style: TextStyle(fontSize: 18),
               )),
         ],

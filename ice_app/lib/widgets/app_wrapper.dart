@@ -15,13 +15,7 @@ class AppWrapper extends StatefulWidget {
 
 class _AppWrapperState extends State<AppWrapper> {
   int currentIndex = 2;
-  final screens = const [
-    Launch(),
-    Statistics(),
-    Dashboard(),
-    Workers(),
-    Profile()
-  ];
+  final screens = const [ Launch(), Statistics(), Dashboard(), Workers(), Profile()];
 
   @override
   Widget build(BuildContext context) {
