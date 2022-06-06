@@ -69,6 +69,11 @@ class _DashboardState extends State<Dashboard> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(data.docs[index]['body']),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(data.docs[index]['resolved']
+                                          ? Icons.check_box
+                                          : Icons.check_box_outline_blank))
                                 ],
                               ),
                             ),
