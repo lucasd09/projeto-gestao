@@ -32,46 +32,50 @@ class _WorkersState extends State<Workers> {
 
             final data = snapshot.requireData;
 
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      DropdownButton(
-                        value: selectedValue,
-                        items: dropdownItems,
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedValue = value!;
-                          });
-                        },
-                      ),
-                    ],
+            return ListView(children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DropdownButton(
+                          value: selectedValue,
+                          items: dropdownItems,
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedValue = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Divider(),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: data.size,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            ListTile(
-                                title: Text(data.docs[index]['name']),
-                                subtitle: Text(data.docs[index]['setor'])),
-                            Text(data.docs[index]['job']),
-                            const Divider(),
-                          ],
-                        );
-                      }),
-                ),
-              ],
-            );
+                  const Divider(
+                    thickness: 1,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: data.size,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              ListTile(
+                                  title: Text(data.docs[index]['name']),
+                                  subtitle: Text(data.docs[index]['setor'])),
+                              Text(data.docs[index]['job']),
+                              const Divider(),
+                            ],
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ]);
           }),
     );
   }

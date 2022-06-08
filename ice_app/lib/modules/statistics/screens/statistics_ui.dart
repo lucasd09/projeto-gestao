@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:ice_app/constants/app_constants.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -38,6 +40,27 @@ class _StatisticsState extends State<Statistics> {
               }
             }
 
+            loadData() {
+              return List.generate(data.size, (i) {
+                return PieChartSectionData(color: PrimaryColor);
+              });
+            }
+
+            Widget loadGrafico() {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: PieChart(PieChartData(
+                        sectionsSpace: 5,
+                        centerSpaceRadius: 110,
+                        sections: loadData())),
+                  )
+                ],
+              );
+            }
+
             return Padding(
               padding: const EdgeInsets.only(top: 50),
               child: Column(
@@ -50,7 +73,7 @@ class _StatisticsState extends State<Statistics> {
                   ),
                   const Divider(),
                   Text('Total de reclamações: ${data.size}'),
-                  Text('Reclamações resolvidas: $resolved')
+                  Text('Reclamações resolvidas: $resolved'),
                 ],
               ),
             );

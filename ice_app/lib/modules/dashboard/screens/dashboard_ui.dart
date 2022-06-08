@@ -31,58 +31,63 @@ class _DashboardState extends State<Dashboard> {
 
             final data = snapshot.requireData;
 
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      DropdownButton(
-                        value: selectedValue,
-                        items: dropdownItems,
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedValue = value!;
-                          });
-                        },
+            return SizedBox(
+              width: MediaQuery.of(context).size.width / 1.2,
+              
+              child: ListView(scrollDirection: Axis.vertical, children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          DropdownButton(
+                            value: selectedValue,
+                            items: dropdownItems,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValue = value!;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: data.size,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                                title: Text(data.docs[index]['title']),
-                                subtitle: Text(data.docs[index]['setor'])),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.2,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(data.docs[index]['body']),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(data.docs[index]['resolved']
-                                          ? Icons.check_box
-                                          : Icons.check_box_outline_blank))
-                                ],
+                    ),
+                    const Divider(thickness: 1),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: data.size,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                  title: Text(data.docs[index]['title']),
+                                  subtitle: Text(data.docs[index]['setor'])),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(data.docs[index]['body']),
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(data.docs[index]['resolved']
+                                            ? Icons.check_box
+                                            : Icons.check_box_outline_blank))
+                                  ],
+                                ),
                               ),
-                            ),
-                            const Divider(),
-                          ],
-                        );
-                      }),
+                              const Divider(
+                                thickness: 1,
+                              ),
+                            ],
+                          );
+                        }),
+                  ],
                 ),
-              ],
+              ]),
             );
           }),
     );
