@@ -132,7 +132,7 @@ class _ProfileState extends State<Profile> {
                       const Text('Nome:'),
                       TextFormField(
                         decoration:
-                            InputDecoration(labelText: data.docs[1]['name']),
+                            InputDecoration(labelText: data.docs[0]['name']),
                         enabled: enable,
                         controller: nome,
                       ),
@@ -140,7 +140,7 @@ class _ProfileState extends State<Profile> {
                       const Text('Empresa:'),
                       TextFormField(
                         decoration:
-                            InputDecoration(labelText: data.docs[1]['company']),
+                            InputDecoration(labelText: data.docs[0]['company']),
                         enabled: enable,
                         controller: empresa,
                       ),
@@ -148,7 +148,7 @@ class _ProfileState extends State<Profile> {
                       const Text('Cargo:'),
                       TextFormField(
                         decoration:
-                            InputDecoration(labelText: data.docs[1]['job']),
+                            InputDecoration(labelText: data.docs[0]['job']),
                         enabled: enable,
                         controller: cargo,
                       ),
@@ -156,7 +156,7 @@ class _ProfileState extends State<Profile> {
                       const Text('email:'),
                       TextFormField(
                         decoration:
-                            InputDecoration(labelText: data.docs[1]['email']),
+                            InputDecoration(labelText: data.docs[0]['email']),
                         enabled: false,
                         controller: email,
                       ),

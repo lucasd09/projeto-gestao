@@ -31,6 +31,19 @@ class _LaunchState extends State<Launch> {
     super.dispose();
   }
 
+  final db = FirebaseFirestore.instance;
+
+  // Future<List<DropdownMenuItem<String>>> get dropdownItems async {
+  //   List<DropdownMenuItem<String>> menuItems = [];
+  //   for (var i = 1; i < 5; i++) {
+  //     await db.collection('sectors').doc(i.toString()).get().then((value) => {
+  //       menuItems.add(DropdownMenuItem(
+  //         child: Text(value[i]['name']), value: value[i]['name']))
+  //     });
+  //   }
+  //   return menuItems;
+  // }
+
   List<DropdownMenuItem<String>> get dropdownItems {
     List<DropdownMenuItem<String>> menuItems = const [
       DropdownMenuItem(child: Text('Setor 1'), value: 'Setor 1'),
@@ -41,142 +54,170 @@ class _LaunchState extends State<Launch> {
     return menuItems;
   }
 
-  final db = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;
 
+    final Stream<QuerySnapshot> complains =
+        FirebaseFirestore.instance.collection("complains").snapshots();
+
     return Center(
-        child: SizedBox(
-      width: width / 1.2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Reclamação'),
-          const Divider(
-            thickness: 1,
-          ),
-          TextFormField(
-            controller: complainTitle,
-            decoration: const InputDecoration(
-              labelText: 'Nome do funcionário',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          DropdownButton(
-            value: selectedValue1,
-            items: dropdownItems,
-            onChanged: (String? value) {
-              setState(() {
-                selectedValue1 = value!;
-              });
-            },
-          ),
-          TextFormField(
-            controller: complainBody,
-            decoration: const InputDecoration(
-              labelText: 'Reclamação',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: PrimaryColor, fixedSize: const Size(155, 40)),
-                onPressed: () {
-                  var complain = <String, dynamic>{
-                    "title": complainTitle.text.trim(),
-                    "setor": selectedValue1,
-                    "body": complainBody.text.trim(),
-                    "resolved": false
-                  };
+      child: StreamBuilder<QuerySnapshot>(
+          stream: complains,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Text('ERRO');
+            }
 
-                  db.collection("complains").add(complain);
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
 
-                  complainBody.clear();
-                  complainTitle.clear();
+            final data = snapshot.requireData;
 
-                  final snackBar = SnackBar(
-                    content: const Text('Lançamento realizado com Sucesso!'),
-                    action: SnackBarAction(
-                      label: 'Fechar',
-                      onPressed: () {
-                        // Some code to undo the change.
+            return SizedBox(
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Reclamação'),
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    TextFormField(
+                      controller: complainTitle,
+                      decoration: const InputDecoration(
+                        labelText: 'Nome do funcionário',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    DropdownButton(
+                      value: selectedValue1,
+                      items: dropdownItems,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedValue1 = value!;
+                        });
                       },
                     ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-                child: const Text(
-                  'Lançar',
-                  style: TextStyle(fontSize: 18),
-                )),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 100)),
-          const Text('Cadastrar Funcionário'),
-          const Divider(),
-          TextFormField(
-            controller: workerName,
-            decoration: const InputDecoration(
-              labelText: 'Nome do funcionário',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          DropdownButton(
-            value: selectedValue2,
-            items: dropdownItems,
-            onChanged: (String? value) {
-              setState(() {
-                selectedValue2 = value!;
-              });
-            },
-          ),
-          TextFormField(
-            controller: workerJob,
-            decoration: const InputDecoration(
-              labelText: 'Cargo',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: PrimaryColor, fixedSize: const Size(155, 40)),
-                onPressed: () {
-                  var worker = <String, dynamic>{
-                    "name": workerName.text.trim(),
-                    "setor": selectedValue2,
-                    "job": workerJob.text.trim()
-                  };
+                    TextFormField(
+                      controller: complainBody,
+                      decoration: const InputDecoration(
+                        labelText: 'Reclamação',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: PrimaryColor,
+                              fixedSize: const Size(155, 40)),
+                          onPressed: () {
+                            final postID = data.size + 1;
 
-                  db.collection("workers").add(worker);
+                            var complain = <String, dynamic>{
+                              "id": postID,
+                              "title": complainTitle.text.trim(),
+                              "setor": selectedValue1,
+                              "body": complainBody.text.trim(),
+                              "resolved": false
+                            };
 
-                  workerName.clear();
-                  workerJob.clear();
+                            db
+                                .collection("complains")
+                                .doc(postID.toString())
+                                .set(complain);
 
-                  final snackBar = SnackBar(
-                    content: const Text('Funcionário Cadastrado com Sucesso!'),
-                    action: SnackBarAction(
-                      label: 'Fechar',
-                      onPressed: () {
-                        // Some code to undo the change.
+                            complainBody.clear();
+                            complainTitle.clear();
+
+                            final snackBar = SnackBar(
+                              content: const Text(
+                                  'Lançamento realizado com Sucesso!'),
+                              action: SnackBarAction(
+                                label: 'Fechar',
+                                onPressed: () {
+                                  // Some code to undo the change.
+                                },
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          },
+                          child: const Text(
+                            'Lançar',
+                            style: TextStyle(fontSize: 18),
+                          )),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 25)),
+                    const Text('Cadastrar Funcionário'),
+                    const Divider(),
+                    TextFormField(
+                      controller: workerName,
+                      decoration: const InputDecoration(
+                        labelText: 'Nome do funcionário',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    DropdownButton(
+                      value: selectedValue2,
+                      items: dropdownItems,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedValue2 = value!;
+                        });
                       },
                     ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-                child: const Text(
-                  'Cadastrar',
-                  style: TextStyle(fontSize: 18),
-                )),
-          ),
-        ],
-      ),
-    ));
+                    TextFormField(
+                      controller: workerJob,
+                      decoration: const InputDecoration(
+                        labelText: 'Cargo',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: PrimaryColor,
+                              fixedSize: const Size(155, 40)),
+                          onPressed: () {
+                            var worker = <String, dynamic>{
+                              "name": workerName.text.trim(),
+                              "setor": selectedValue2,
+                              "job": workerJob.text.trim()
+                            };
+
+                            db.collection("workers").add(worker);
+
+                            workerName.clear();
+                            workerJob.clear();
+
+                            final snackBar = SnackBar(
+                              content: const Text(
+                                  'Funcionário Cadastrado com Sucesso!'),
+                              action: SnackBarAction(
+                                label: 'Fechar',
+                                onPressed: () {
+                                  // Some code to undo the change.
+                                },
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          },
+                          child: const Text(
+                            'Cadastrar',
+                            style: TextStyle(fontSize: 18),
+                          )),
+                    ),
+                  ],
+                ));
+          }),
+    );
   }
 }

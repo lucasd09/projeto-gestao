@@ -10,11 +10,14 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   var selectedValue = "Setor 1";
+
+  var db = FirebaseFirestore.instance.collection('complains');
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> complains = FirebaseFirestore.instance
         .collection("complains")
         .where("setor", isEqualTo: selectedValue)
+        .where("resolved", isEqualTo: false)
         .snapshots();
     return Center(
       child: StreamBuilder<QuerySnapshot>(
@@ -33,29 +36,28 @@ class _DashboardState extends State<Dashboard> {
 
             return SizedBox(
               width: MediaQuery.of(context).size.width / 1.2,
-              
-              child: ListView(scrollDirection: Axis.vertical, children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          DropdownButton(
-                            value: selectedValue,
-                            items: dropdownItems,
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedValue = value!;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DropdownButton(
+                          value: selectedValue,
+                          items: dropdownItems,
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedValue = value!;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    const Divider(thickness: 1),
-                    ListView.builder(
+                  ),
+                  const Divider(thickness: 1),
+                  Expanded(
+                    child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: data.size,
                         itemBuilder: (context, index) {
@@ -72,7 +74,66 @@ class _DashboardState extends State<Dashboard> {
                                   children: [
                                     Text(data.docs[index]['body']),
                                     IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          // set up the buttons
+                                          Widget cancelButton = TextButton(
+                                            child: const Text("Cancelar"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          );
+                                          Widget continueButton = TextButton(
+                                            child: const Text("Continuar"),
+                                            onPressed: () {
+                                              db
+                                                  .doc(data.docs[index]['id']
+                                                      .toString())
+                                                  .update({
+                                                "resolved": !data.docs[index]
+                                                    ['resolved']
+                                              });
+                                              Navigator.of(context).pop();
+
+                                              final snackBar = SnackBar(
+                                                content: const Text(
+                                                    'Reclamação resolvida com Sucesso!'),
+                                                action: SnackBarAction(
+                                                  label: 'Fechar',
+                                                  onPressed: () {
+                                                    db
+                                                        .doc(data.docs[index]
+                                                                ['id']
+                                                            .toString())
+                                                        .update({
+                                                      "resolved":
+                                                          !data.docs[index]
+                                                              ['resolved']
+                                                    });
+                                                  },
+                                                ),
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            },
+                                          );
+                                          // set up the AlertDialog
+                                          AlertDialog alert = AlertDialog(
+                                            title: const Text("Aviso"),
+                                            content: const Text(
+                                                "Tem certeza que quer resolver essa reclamação?"),
+                                            actions: [
+                                              cancelButton,
+                                              continueButton,
+                                            ],
+                                          );
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return alert;
+                                            },
+                                          );
+                                        },
                                         icon: Icon(data.docs[index]['resolved']
                                             ? Icons.check_box
                                             : Icons.check_box_outline_blank))
@@ -85,9 +146,9 @@ class _DashboardState extends State<Dashboard> {
                             ],
                           );
                         }),
-                  ],
-                ),
-              ]),
+                  ),
+                ],
+              ),
             );
           }),
     );

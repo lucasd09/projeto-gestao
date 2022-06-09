@@ -32,8 +32,9 @@ class _WorkersState extends State<Workers> {
 
             final data = snapshot.requireData;
 
-            return ListView(children: [
-              Column(
+            return SizedBox(
+              width: MediaQuery.of(context).size.width / 1.2,
+              child: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
@@ -55,27 +56,27 @@ class _WorkersState extends State<Workers> {
                   const Divider(
                     thickness: 1,
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.2,
+                  Expanded(
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: data.size,
                         itemBuilder: (context, index) {
                           return Column(
-                            mainAxisSize: MainAxisSize.max,
                             children: [
                               ListTile(
                                   title: Text(data.docs[index]['name']),
                                   subtitle: Text(data.docs[index]['setor'])),
                               Text(data.docs[index]['job']),
-                              const Divider(),
+                              const Divider(
+                                thickness: 1,
+                              ),
                             ],
                           );
                         }),
                   ),
                 ],
               ),
-            ]);
+            );
           }),
     );
   }
