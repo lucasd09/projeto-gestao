@@ -103,7 +103,9 @@ class _DashboardState extends State<Dashboard> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(data.docs[index]['body']),
+                                            Flexible(
+                                                child: Text(
+                                                    data.docs[index]['body'])),
                                             IconButton(
                                                 onPressed: () {
                                                   // set up the buttons
