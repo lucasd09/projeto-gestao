@@ -209,41 +209,58 @@ class _LaunchState extends State<Launch> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: PrimaryColor,
-                                    fixedSize: const Size(155, 40)),
-                                onPressed: () {
-                                  var worker = <String, dynamic>{
-                                    "name": workerName.text.trim(),
-                                    "setor": selectedValue2,
-                                    "job": workerJob.text.trim()
-                                  };
+                              padding: const EdgeInsets.only(top: 15),
+                              child: StreamBuilder(
+                                  stream: users,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasError) {
+                                      return const Text('ERRO');
+                                    }
 
-                                  db.collection("workers").add(worker);
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    }
 
-                                  workerName.clear();
-                                  workerJob.clear();
+                                    final userData = snapshot.requireData;
 
-                                  final snackBar = SnackBar(
-                                    content: const Text(
-                                        'Funcionário Cadastrado com Sucesso!'),
-                                    action: SnackBarAction(
-                                      label: 'Fechar',
-                                      onPressed: () {
-                                        // Some code to undo the change.
-                                      },
-                                    ),
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                },
-                                child: const Text(
-                                  'Cadastrar',
-                                  style: TextStyle(fontSize: 18),
-                                )),
-                          ),
+                                    return ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: PrimaryColor,
+                                            fixedSize: const Size(155, 40)),
+                                        onPressed: () {
+                                          var worker = <String, dynamic>{
+                                            "name": workerName.text.trim(),
+                                            "setor": selectedValue2,
+                                            "job": workerJob.text.trim(),
+                                            "company": userData.docs[0]
+                                                ["company"],
+                                          };
+
+                                          db.collection("workers").add(worker);
+
+                                          workerName.clear();
+                                          workerJob.clear();
+
+                                          final snackBar = SnackBar(
+                                            content: const Text(
+                                                'Funcionário Cadastrado com Sucesso!'),
+                                            action: SnackBarAction(
+                                              label: 'Fechar',
+                                              onPressed: () {
+                                                // Some code to undo the change.
+                                              },
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        },
+                                        child: const Text(
+                                          'Cadastrar',
+                                          style: TextStyle(fontSize: 18),
+                                        ));
+                                  })),
                         ],
                       ),
                     ),

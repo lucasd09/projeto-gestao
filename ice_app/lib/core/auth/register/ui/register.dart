@@ -33,6 +33,9 @@ class _RegisterState extends State<Register> {
 
   final db = FirebaseFirestore.instance;
 
+  var view1 = false;
+  var view2 = false;
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
@@ -134,17 +137,37 @@ class _RegisterState extends State<Register> {
                 Padding(
                   padding: EdgeInsets.only(bottom: pad),
                   child: TextFormField(
+                      obscureText: !view1,
                       controller: senhaController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                view1 = !view1;
+                              });
+                            },
+                            child: Icon(view1
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined)),
+                        border: const OutlineInputBorder(),
                         labelText: 'Senha',
                       )),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: pad),
                   child: TextFormField(
+                      obscureText: !view2,
                       controller: senha2Controller,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                view2 = !view2;
+                              });
+                            },
+                            child: Icon(view2
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined)),
                         border: OutlineInputBorder(),
                         labelText: 'Repetir senha',
                       )),
@@ -163,64 +186,67 @@ class _RegisterState extends State<Register> {
 
                       final data = snapshot.requireData;
 
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: PrimaryColor,
-                            fixedSize: const Size(155, 40)),
-                        onPressed: () {
-                          if (senhaController.text == senha2Controller.text) {
-                            var user = <String, dynamic>{
-                              "name": nomeController.text.trim(),
-                              "company": fantasiaController.text.trim(),
-                              "job": jobController.text.trim(),
-                              "email": emailController.text.trim()
-                            };
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 25),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: PrimaryColor,
+                              fixedSize: const Size(155, 40)),
+                          onPressed: () {
+                            if (senhaController.text == senha2Controller.text) {
+                              var user = <String, dynamic>{
+                                "name": nomeController.text.trim(),
+                                "company": fantasiaController.text.trim(),
+                                "job": jobController.text.trim(),
+                                "email": emailController.text.trim()
+                              };
 
-                            var empresa = <String, dynamic>{
-                              "razaosocial": razaoController.text.trim(),
-                              "nomefantasia": fantasiaController.text.trim(),
-                              "cnpj": cnpjController.text.trim(),
-                              "ie": ieController.text.trim()
-                            };
+                              var empresa = <String, dynamic>{
+                                "razaosocial": razaoController.text.trim(),
+                                "nomefantasia": fantasiaController.text.trim(),
+                                "cnpj": cnpjController.text.trim(),
+                                "ie": ieController.text.trim()
+                              };
 
-                            db
-                                .collection("users")
-                                .doc(emailController.text.trim())
-                                .set(user);
-                            db
-                                .collection("companies")
-                                .doc((data.size + 1).toString())
-                                .set(empresa);
+                              db
+                                  .collection("users")
+                                  .doc(emailController.text.trim())
+                                  .set(user);
+                              db
+                                  .collection("companies")
+                                  .doc((data.size + 1).toString())
+                                  .set(empresa);
 
-                            context.read<AuthService>().signUp(
-                                email: emailController.text.trim(),
-                                password: senhaController.text);
+                              context.read<AuthService>().signUp(
+                                  email: emailController.text.trim(),
+                                  password: senhaController.text);
 
-                            razaoController.clear();
-                            fantasiaController.clear();
-                            cnpjController.clear();
-                            ieController.clear();
-                            nomeController.clear();
-                            senhaController.clear();
-                            senha2Controller.clear();
-                            emailController.clear();
-                            jobController.clear();
+                              razaoController.clear();
+                              fantasiaController.clear();
+                              cnpjController.clear();
+                              ieController.clear();
+                              nomeController.clear();
+                              senhaController.clear();
+                              senha2Controller.clear();
+                              emailController.clear();
+                              jobController.clear();
 
-                            Navigator.pop(context);
+                              Navigator.pop(context);
 
-                            final snackBar = SnackBar(
-                              content:
-                                  const Text('Cadastro realizado com Sucesso!'),
-                              action: SnackBarAction(
-                                label: 'Fechar',
-                                onPressed: () {},
-                              ),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }
-                        },
-                        child: const Text('Cadastrar'),
+                              final snackBar = SnackBar(
+                                content: const Text(
+                                    'Cadastro realizado com Sucesso!'),
+                                action: SnackBarAction(
+                                  label: 'Fechar',
+                                  onPressed: () {},
+                                ),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
+                          },
+                          child: const Text('Cadastrar'),
+                        ),
                       );
                     })
               ],
