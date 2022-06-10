@@ -64,115 +64,122 @@ class _ProfileState extends State<Profile> {
 
             return SizedBox(
               width: width / 1.6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/ice_logo.png',
-                        width: 160,
-                        height: 160,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              enable = !enable;
-                            });
-                          },
-                          child: const Icon(
-                              Icons.drive_file_rename_outline_outlined)),
-                      enable
-                          ? ElevatedButton(
-                              onPressed: () {
-                                db.doc(firebaseUser?.email).update({
-                                  'company': empresa.text,
-                                  'name': nome.text,
-                                  'job': cargo.text
-                                });
-
-                                nome.clear();
-                                empresa.clear();
-                                cargo.clear();
-
-                                setState(() {
-                                  enable = !enable;
-                                });
-
-                                final snackBar = SnackBar(
-                                  content: const Text(
-                                      'Alterações realizadas com Sucesso!'),
-                                  action: SnackBarAction(
-                                    label: 'Fechar',
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/ice_logo.png',
+                              width: 160,
+                              height: 160,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    enable = !enable;
+                                  });
+                                },
+                                child: const Icon(
+                                    Icons.drive_file_rename_outline_outlined)),
+                            enable
+                                ? ElevatedButton(
                                     onPressed: () {
-                                      // Some code to undo the change.
+                                      db.doc(firebaseUser?.email).update({
+                                        'company': empresa.text,
+                                        'name': nome.text,
+                                        'job': cargo.text
+                                      });
+
+                                      nome.clear();
+                                      empresa.clear();
+                                      cargo.clear();
+
+                                      setState(() {
+                                        enable = !enable;
+                                      });
+
+                                      final snackBar = SnackBar(
+                                        content: const Text(
+                                            'Alterações realizadas com Sucesso!'),
+                                        action: SnackBarAction(
+                                          label: 'Fechar',
+                                          onPressed: () {
+                                            // Some code to undo the change.
+                                          },
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
                                     },
-                                  ),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              },
-                              child: const Icon(Icons.save_outlined))
-                          : const Icon(Icons.save_outlined)
-                    ],
-                  ),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Nome:'),
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: data.docs[0]['name']),
-                        enabled: enable,
-                        controller: nome,
-                      ),
-                      const Divider(),
-                      const Text('Empresa:'),
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: data.docs[0]['company']),
-                        enabled: enable,
-                        controller: empresa,
-                      ),
-                      const Divider(),
-                      const Text('Cargo:'),
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: data.docs[0]['job']),
-                        enabled: enable,
-                        controller: cargo,
-                      ),
-                      const Divider(),
-                      const Text('email:'),
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: data.docs[0]['email']),
-                        enabled: false,
-                        controller: email,
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                  TextButton.icon(
-                    onPressed: () {
-                      context.read<AuthService>().signOut();
-                    },
-                    icon: const Icon(Icons.logout_outlined),
-                    label: const Text(
-                      'Logout',
-                      style: TextStyle(color: PrimaryTextColor),
+                                    child: const Icon(Icons.save_outlined))
+                                : const Icon(Icons.save_outlined)
+                          ],
+                        ),
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Nome:'),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  labelText: data.docs[0]['name']),
+                              enabled: enable,
+                              controller: nome,
+                            ),
+                            const Divider(),
+                            const Text('Cargo:'),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  labelText: data.docs[0]['job']),
+                              enabled: enable,
+                              controller: cargo,
+                            ),
+                            const Divider(),
+                            const Text('Empresa:'),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  labelText: data.docs[0]['company']),
+                              enabled: false,
+                              controller: empresa,
+                            ),
+                            const Divider(),
+                            const Text('email:'),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                  labelText: data.docs[0]['email']),
+                              enabled: false,
+                              controller: email,
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        TextButton.icon(
+                          onPressed: () {
+                            context.read<AuthService>().signOut();
+                          },
+                          icon: const Icon(Icons.logout_outlined),
+                          label: const Text(
+                            'Logout',
+                            style: TextStyle(color: PrimaryTextColor),
+                          ),
+                        )
+                      ],
                     ),
-                  )
+                  ),
                 ],
               ),
             );

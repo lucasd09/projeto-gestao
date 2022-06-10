@@ -26,6 +26,8 @@ class _LoginState extends State<Login> {
 
   var size, height, width;
 
+  var view = false;
+
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -56,12 +58,19 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 51),
                 child: TextFormField(
-                  obscureText: true,
+                  obscureText: !view,
                   controller: passwordController,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: GestureDetector(
-                        child: const Icon(Icons.visibility_off_outlined)),
+                        onTap: () {
+                          setState(() {
+                            view = !view;
+                          });
+                        },
+                        child: Icon(view
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined)),
                     border: const OutlineInputBorder(),
                     labelText: 'Senha',
                   ),

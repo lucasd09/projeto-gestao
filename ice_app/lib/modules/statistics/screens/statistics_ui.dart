@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app/constants/app_constants.dart';
+import 'package:provider/provider.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
@@ -18,6 +20,13 @@ class _StatisticsState extends State<Statistics> {
         .orderBy("setor")
         .snapshots();
 
+    final firebaseUser = context.watch<User?>();
+
+    final Stream<QuerySnapshot> users = FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: firebaseUser?.email)
+        .snapshots();
+
     return Center(
       child: StreamBuilder<QuerySnapshot>(
           stream: complains,
@@ -32,13 +41,6 @@ class _StatisticsState extends State<Statistics> {
             }
 
             final data = snapshot.requireData;
-
-            var resolved = 0;
-            for (var i in data.docs) {
-              if (i['resolved'] == true) {
-                resolved += 1;
-              }
-            }
 
             loadData() {
               return List.generate(data.size, (i) {
@@ -72,8 +74,41 @@ class _StatisticsState extends State<Statistics> {
                     ),
                   ),
                   const Divider(),
-                  Text('Total de reclamações: ${data.size}'),
-                  Text('Reclamações resolvidas: $resolved'),
+                  StreamBuilder(
+                      stream: users,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return const Text('ERRO');
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        final userData = snapshot.requireData;
+
+                        var resolved = 0;
+                        var size = 0;
+
+                        for (var i in data.docs) {
+                          if (i['company'] == userData.docs[0]['company']) {
+                            size += 1;
+                            if (i['resolved'] == true) {
+                              resolved += 1;
+                            }
+                          }
+                        }
+
+                        return Column(
+                          children: [
+                            Text('Total de reclamações: $size'),
+                            Text('Reclamações resolvidas: $resolved'),
+                          ],
+                        );
+                      }),
                 ],
               ),
             );

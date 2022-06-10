@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Workers extends StatefulWidget {
   const Workers({Key? key}) : super(key: key);
@@ -16,6 +18,12 @@ class _WorkersState extends State<Workers> {
     final Stream<QuerySnapshot> complains = FirebaseFirestore.instance
         .collection("workers")
         .where("setor", isEqualTo: selectedValue)
+        .snapshots();
+
+    final firebaseUser = context.watch<User?>();
+    final Stream<QuerySnapshot> users = FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: firebaseUser?.email)
         .snapshots();
     return Center(
       child: StreamBuilder<QuerySnapshot>(
@@ -56,24 +64,45 @@ class _WorkersState extends State<Workers> {
                   const Divider(
                     thickness: 1,
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: data.size,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                  title: Text(data.docs[index]['name']),
-                                  subtitle: Text(data.docs[index]['setor'])),
-                              Text(data.docs[index]['job']),
-                              const Divider(
-                                thickness: 1,
-                              ),
-                            ],
-                          );
-                        }),
-                  ),
+                  StreamBuilder(
+                      stream: users,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return const Text('ERRO');
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        final userData = snapshot.requireData;
+                        return Expanded(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: data.size,
+                              itemBuilder: (context, index) {
+                                if (data.docs[index]['company'] ==
+                                    userData.docs[0]['company']) {
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                          title: Text(data.docs[index]['name']),
+                                          subtitle:
+                                              Text(data.docs[index]['setor'])),
+                                      Text(data.docs[index]['job']),
+                                      const Divider(
+                                        thickness: 1,
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return const Padding(
+                                    padding: EdgeInsets.all(0));
+                              }),
+                        );
+                      })
                 ],
               ),
             );
